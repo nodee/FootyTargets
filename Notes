@@ -1,0 +1,35 @@
+void FTarget::updateLED(int mode){
+
+  int mask = 0x80000000;
+  long colour = 0;
+
+  digitalWriteFast(clockPins[target], 0);
+  digitalWriteFast(dataPins[target], 0);
+
+  switch(mode){
+    case RED:{
+      colour = 0x00FF0000;
+      break;
+    }
+    case WHITE_ROTATE:{
+      colour = 0x00FFFFFF;
+      break;
+    }
+  }
+  for (int x = 0; i < NUM_LEDS; x++){
+    for(int i = 0; i < 32; i++){
+      if(mask & colour){
+        digitalWriteFast(dataPins[target], 1);
+      }
+      else{
+        digitalWriteFast(dataPins[target], 0);
+      }
+      digitalWriteFast(clockPins[target] , 1);
+      digitalWriteFast(clockPins[target] , 0);
+      mask = mask >> 1;
+    }
+
+    digitalWriteFast(clockPins[target], 0);
+    digitalWriteFast(dataPins[target], 0);
+  }
+}
