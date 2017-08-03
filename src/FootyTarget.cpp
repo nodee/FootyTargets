@@ -1,12 +1,13 @@
 #include "FootyTarget.h"
 
-FTarget::FTarget(int knockPin, int dataPin, int clockPin, int buzzerPin){
+FTarget::FTarget(int knockPin, int dataPin, int clockPin, int buzzerPin): strip(LED_MAX, dataPin, clockPin) {
   _knockPin = knockPin;
-  _dataPin = dataPin;
-  _clockPin = clockPin;
+  pinMode(_knockPin, INPUT);
   _buzzerPin = buzzerPin;
+  pinMode(_buzzerPin, OUTPUT);
   _targetState = 0;
   _score = 0;
+  strip.begin();
   updateLED(0);
 }
 void FTarget::enable(void){
@@ -63,12 +64,13 @@ void FTarget::update(void){
 
 void FTarget::updateLED(int mode){
 
-  long mask;
-  long colour;
   int update;
   static int ledCounter = 0;
   static int ledSetOnce = 0;
   static int prevMode;
+  int red = 0;
+  int grn = 0;
+  int blu = 0;
 
   if(ledCounter){
     ledCounter--;
@@ -120,25 +122,12 @@ void FTarget::updateLED(int mode){
   }
 
   if(update){
-    digitalWriteFast(_clockPin, 0);
-    digitalWriteFast(_dataPin, 0);
-    for (int x = 0; x < NUM_LEDS; x++){
-      colour = _ledBuffer[x];
-      mask = 0x80000000;
-      for(int i = 0; i < 32; i++){
-        if(mask & colour){
-          digitalWriteFast(_dataPin, 1);
-        }
-        else{
-          digitalWriteFast(_dataPin, 0);
-        }
-        digitalWriteFast(_clockPin , 1);
-        delayMicroseconds(10);
-        digitalWriteFast(_clockPin , 0);
-        mask = mask >> 1;
-      }
+    for(int i = 0; i < LED_MAX; i++){
+      blu = _ledBuffer[i] & 0x000000FF;
+      grn = (_ledBuffer[i] >> 8) & 0x000000FF;
+      red = (_ledBuffer[i] >> 16) & 0x000000FF;
+      strip.setPixelColor(i, red, grn, blu);
+      strip.show();
     }
-    digitalWriteFast(_clockPin, 0);
-    digitalWriteFast(_dataPin, 0);
   }
 }

@@ -1,14 +1,15 @@
 #ifndef FOOTYTARGET_H
 #define FOOTYTARGET_H
 
-#include <digitalWriteFast.h>
 #include <arduino.h>
+#include <SPI.h>
+#include <Adafruit_WS2801.h>
 
 #define DEBOUNCE_MASK 0x00C2
-#define NUM_LEDS 12
-#define LED_CYCLE_RATE 20
-#define LED_MAX 10
-#define LED_HIT_DURATION 400
+
+#define LED_CYCLE_RATE 3
+#define LED_MAX 24
+#define LED_HIT_DURATION 200
 
 class FTarget{
   public:
@@ -21,8 +22,6 @@ class FTarget{
     void updateLED(int mode);
   private:
     int _knockPin;
-    int _dataPin;
-    int _clockPin;
     int _buzzerPin;
 
     int _targetState;
@@ -37,6 +36,8 @@ class FTarget{
     int _ledCounter;
     int _ledPosition;
     long _ledBuffer[LED_MAX];
+
+    Adafruit_WS2801 strip;
 };
 
 #endif
