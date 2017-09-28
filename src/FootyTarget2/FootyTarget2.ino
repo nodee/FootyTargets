@@ -6,25 +6,25 @@
 #define LED_MAX 24              // Number of LEDs in ring
 #define LED_HIT_DURATION 200    // LED_HIT_DURATION * 5ms
 
-#define TARGET_0_CLK 2
-#define TARGET_0_DAT 3
+#define TARGET_0_CLK 38
+#define TARGET_0_DAT 37
 #define TARGET_0_BUZ 4
-#define TARGET_0_NOK 5
+#define TARGET_0_NOK 34
 
-#define TARGET_1_CLK 6
-#define TARGET_1_DAT 7
+#define TARGET_1_CLK 40
+#define TARGET_1_DAT 39
 #define TARGET_1_BUZ 8
-#define TARGET_1_NOK 9
+#define TARGET_1_NOK 33
 
-#define TARGET_2_CLK 10
-#define TARGET_2_DAT 11
+#define TARGET_2_CLK 42
+#define TARGET_2_DAT 41
 #define TARGET_2_BUZ 12
-#define TARGET_2_NOK 13
+#define TARGET_2_NOK 32
 
-#define TARGET_3_CLK 14
-#define TARGET_3_DAT 15
+#define TARGET_3_CLK 44
+#define TARGET_3_DAT 43
 #define TARGET_3_BUZ 16
-#define TARGET_3_NOK 17
+#define TARGET_3_NOK 31
 
 int activeTarget = 0;
 int score = 0;
@@ -58,14 +58,18 @@ void setup() {
 }
 
 void loop() {
-
   if(changeTarget || !systemCounter){   // if score has changed (hit detected) or the counter has hit 0
       changeTarget = 0;
       activeTarget = random(0,4);               // generate random target between 0 and 3
       systemCounter = 2000;                     // value * 5ms before next target 2000 * 5ms = 10seconds
   }
-  
 
+/*
+---------------
+CODE 
+HERE
+---------------
+*/
 }
 
 void targetUpdate() {
@@ -149,7 +153,7 @@ void targetUpdate() {
         }                                                 //
         for (int i = 0; i < LED_MAX; i++) {               // 
           if (i == ledPosition) {                         // 
-            sendData(0xFF, 0xFF, 0xFF);                   //
+            sendData(0, 0, 0xFF);                   //
           }                                               //
           else {                                          //
             sendData(0x00, 0x00, 0x00);                   //
@@ -186,7 +190,7 @@ void disableBuzzer() {
   digitalWriteFast(TARGET_3_BUZ, LOW);
 }
 
-void sendData(int r, int g, int b) {
+void sendData(int b, int g, int r) {
 
   long rgbData = 0;
 
